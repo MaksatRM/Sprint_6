@@ -42,3 +42,5 @@ python -m pytest --alluredir=allure_results
 ```bash
 allure serve allure_results
 ```
+
+Проект выполнен в рамках финального задания 6 спринта.
