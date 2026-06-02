@@ -1,60 +1,28 @@
+import allure
 import pytest
 
+from data import ORDER_DATA
 from pages.main_page import MainPage
 from pages.order_page import OrderPage
-from locators.main_page_locators import MainPageLocators
 
 
 class TestOrder:
 
+    @allure.title('Проверка успешного оформления заказа самоката')
     @pytest.mark.parametrize(
         'order_button_locator, name, surname, address, metro_station, phone, delivery_date, rent_period, color, comment',
-        [
-            [
-                MainPageLocators.TOP_ORDER_BUTTON,
-                'Максат',
-                'Кургамбаев',
-                'Москва, улица Пушкина, дом 10',
-                'Сокольники',
-                '89991234567',
-                '15.06.2026',
-                'сутки',
-                'black',
-                'Позвонить за час'
-            ],
-            [
-                MainPageLocators.BOTTOM_ORDER_BUTTON,
-                'Иван',
-                'Иванов',
-                'Москва, улица Ленина, дом 5',
-                'Черкизовская',
-                '89997654321',
-                '16.06.2026',
-                'двое суток',
-                'grey',
-                'Оставить у подъезда'
-            ],
-        ]
+        ORDER_DATA
     )
-    def test_create_order(
-            self,
-            driver,
-            order_button_locator,
-            name,
-            surname,
-            address,
-            metro_station,
-            phone,
-            delivery_date,
-            rent_period,
-            color,
-            comment
+    def test_order_success(
+            self, driver, order_button_locator, name, surname, address,
+            metro_station, phone, delivery_date, rent_period, color, comment
     ):
         main_page = MainPage(driver)
+        order_page = OrderPage(driver)
+
         main_page.open_main_page()
         main_page.click_order_button(order_button_locator)
 
-        order_page = OrderPage(driver)
         order_page.fill_first_order_form(name, surname, address, metro_station, phone)
         order_page.fill_second_order_form(delivery_date, rent_period, color, comment)
 

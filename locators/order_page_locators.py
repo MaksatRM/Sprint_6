@@ -23,3 +23,11 @@ class OrderPageLocators:
 
     # Окно успешного заказа
     ORDER_SUCCESS_MODAL = [By.XPATH, ".//div[contains(text(), 'Заказ оформлен')]"]
+    
+    @staticmethod
+    def metro_station_locator(metro_station):
+        return [By.XPATH, f".//div[text()='{metro_station}']"]
+
+    @staticmethod
+    def rent_period_locator(rent_period):
+        return [By.XPATH, f".//div[text()='{rent_period}']"]

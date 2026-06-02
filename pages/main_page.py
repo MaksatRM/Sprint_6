@@ -1,60 +1,46 @@
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
+import allure
+
 from locators.main_page_locators import MainPageLocators
+from pages.base_page import BasePage
+from urls import MAIN_URL, DZEN_URL
 
-class MainPage:
-    URL = 'https://qa-scooter.praktikum-services.ru/'
 
-    def __init__(self, driver):
-        self.driver = driver
+class MainPage(BasePage):
 
+    @allure.step('Открыть главную страницу')
     def open_main_page(self):
-        self.driver.get(self.URL)
+        self.open_url(MAIN_URL)
 
-    def scroll_to_element(self, locator):
-        element = self.driver.find_element(*locator)
-        self.driver.execute_script("arguments[0].scrollIntoView();", element)
-
+    @allure.step('Кликнуть по вопросу')
     def click_question(self, question_locator):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.element_to_be_clickable(question_locator)
-        )
-        self.driver.find_element(*question_locator).click()
+        self.scroll_to_element(question_locator)
+        self.click_element(question_locator)
 
+    @allure.step('Получить текст ответа')
     def get_answer_text(self, answer_locator):
-        return WebDriverWait(self.driver, 5).until(
-            expected_conditions.visibility_of_element_located(answer_locator)
-        ).text
+        return self.get_text(answer_locator)
+
+    @allure.step('Кликнуть по кнопке Заказать')
     def click_order_button(self, order_button_locator):
         self.scroll_to_element(order_button_locator)
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.element_to_be_clickable(order_button_locator)
-        )
-        self.driver.find_element(*order_button_locator).click()
+        self.click_element(order_button_locator)
+
+    @allure.step('Кликнуть по логотипу Самокат')
     def click_scooter_logo(self):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.element_to_be_clickable(MainPageLocators.SCOOTER_LOGO)
-        )
-        self.driver.find_element(*MainPageLocators.SCOOTER_LOGO).click()
+        self.click_element(MainPageLocators.SCOOTER_LOGO)
 
+    @allure.step('Кликнуть по логотипу Яндекс')
     def click_yandex_logo(self):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.element_to_be_clickable(MainPageLocators.YANDEX_LOGO)
-        )
-        self.driver.find_element(*MainPageLocators.YANDEX_LOGO).click()
+        self.click_element(MainPageLocators.YANDEX_LOGO)
 
+    @allure.step('Переключиться на новое окно')
     def switch_to_new_window(self):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.number_of_windows_to_be(2)
-        )
-        self.driver.switch_to.window(self.driver.window_handles[-1])
+        super().switch_to_new_window()
 
+    @allure.step('Дождаться загрузки главной страницы')
     def wait_for_main_page_url(self):
-        WebDriverWait(self.driver, 5).until(
-            expected_conditions.url_to_be(self.URL)
-        )
+        self.wait_for_url_to_be(MAIN_URL)
 
+    @allure.step('Дождаться открытия Дзен')
     def wait_for_dzen_url(self):
-        WebDriverWait(self.driver, 10).until(
-            expected_conditions.url_contains('dzen.ru')
-        )
+        self.wait_for_url_contains(DZEN_URL)
